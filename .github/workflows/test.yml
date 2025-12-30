@@ -34,4 +34,4 @@ jobs:
       - name: Verify Installation (macOS)
         if: runner.os == 'macOS'
         run: |
-          ls -la /usr/local/lib/ | grep qhy || echo "QHYCCD libraries not found in expected location"
+          find . -name "*.dylib" -o -name "*.framework" | head -10 || echo "No QHYCCD libraries found"
