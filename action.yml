@@ -62,9 +62,7 @@ runs:
         } else {
           Write-Host "Using cached $file"
         }
-        Expand-Archive $file -DestinationPath "sdk_WinMix_${{ inputs.version }}" -Force
-        cd "sdk_WinMix_${{ inputs.version }}"
-        .\install.bat
+        Expand-Archive $file -DestinationPath "." -Force
       shell: powershell
 
     - id: install-macos
