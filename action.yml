@@ -1,0 +1,92 @@
+name: Install QHYCCD SDK
+author: qhyccd-sdk-install
+description: Install QHYCCD SDK on Linux, Windows, and macOS
+branding:
+  icon: download
+  color: blue
+
+inputs:
+  version:
+    description: "QHYCCD SDK version to install (required)"
+    required: true
+  cache:
+    description: "Enable caching of downloaded files"
+    required: false
+    default: 'true'
+
+outputs:
+  version:
+    description: Installed QHYCCD SDK version
+    value: ${{ inputs.version }}
+
+runs:
+  using: composite
+  steps:
+    - id: cache-key
+      run: echo "key=qhyccd-sdk-${{ inputs.version }}-${{ runner.os }}" >> $GITHUB_OUTPUT
+      shell: bash
+
+    - id: cache-restore
+      if: inputs.cache == 'true'
+      uses: actions/cache/restore@v5
+      with:
+        key: ${{ steps.cache-key.outputs.key }}
+        restore-keys: |
+          qhyccd-sdk-${{ inputs.version }}-
+          qhyccd-sdk-
+        path: |
+          sdk_linux64_*.tgz
+          QHYCCD_SDK_*.zip
+          QHYCCD_SDK_*.dmg
+
+    - id: install-linux
+      if: runner.os == 'Linux'
+      run: |
+        FILE="sdk_linux64_${{ inputs.version }}.tgz"
+        if [ ! -f "$FILE" ]; then
+          wget "https://www.qhyccd.com/file/repository/publish/SDK/${{ inputs.version }}/$FILE"
+        else
+          echo "Using cached $FILE"
+        fi
+        tar xzf "$FILE"
+        cd "sdk_linux64_${{ inputs.version }}/"
+        sudo sh install.sh
+      shell: bash
+
+    - id: install-windows
+      if: runner.os == 'Windows'
+      run: |
+        $file = "QHYCCD_SDK_${{ inputs.version }}.zip"
+        if (-not (Test-Path $file)) {
+          Invoke-WebRequest "https://www.qhyccd.com/file/repository/publish/SDK/${{ inputs.version }}/$file" -OutFile $file -UseBasicParsing
+        } else {
+          Write-Host "Using cached $file"
+        }
+        Expand-Archive $file -DestinationPath "QHYCCD_SDK_${{ inputs.version }}" -Force
+        cd "QHYCCD_SDK_${{ inputs.version }}"
+        .\install.bat
+      shell: powershell
+
+    - id: install-macos
+      if: runner.os == 'macOS'
+      run: |
+        $file = "QHYCCD_SDK_${{ inputs.version }}.dmg"
+        if (-not (Test-Path $file)) {
+          Invoke-WebRequest "https://www.qhyccd.com/file/repository/publish/SDK/${{ inputs.version }}/$file" -OutFile $file -UseBasicParsing
+        } else {
+          Write-Host "Using cached $file"
+        }
+        hdiutil attach $file
+        sudo installer -pkg "/Volumes/QHYCCD SDK/QHYCCD SDK.pkg" -target /
+        hdiutil detach "/Volumes/QHYCCD SDK"
+      shell: pwsh
+
+    - id: cache-save
+      if: inputs.cache == 'true' && steps.cache-restore.outputs.cache-hit != 'true'
+      uses: actions/cache/save@v5
+      with:
+        key: ${{ steps.cache-key.outputs.key }}
+        path: |
+          sdk_linux64_*.tgz
+          QHYCCD_SDK_*.zip
+          QHYCCD_SDK_*.dmg

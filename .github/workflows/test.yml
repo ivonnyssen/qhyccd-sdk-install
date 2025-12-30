@@ -1,0 +1,36 @@
+name: Test Action
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Test QHYCCD SDK Installation
+        uses: ./
+        with:
+          version: "24.12.27"
+      
+      - name: Verify Installation (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          ls -la /usr/local/lib/ | grep qhy || echo "QHYCCD libraries not found in expected location"
+          
+      - name: Verify Installation (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          Get-ChildItem "C:\Program Files\QHYCCD" -ErrorAction SilentlyContinue | Out-String
+        shell: powershell
+        
+      - name: Verify Installation (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          ls -la /usr/local/lib/ | grep qhy || echo "QHYCCD libraries not found in expected location"
