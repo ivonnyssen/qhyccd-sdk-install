@@ -38,6 +38,7 @@ runs:
           sdk_linux64_*.tgz
           sdk_WinMix_*.zip
           sdk_macMix_*.tgz
+          sdk_mac_arm_*.tgz
 
     - id: install-linux
       if: runner.os == 'Linux'
@@ -68,14 +69,21 @@ runs:
     - id: install-macos
       if: runner.os == 'macOS'
       run: |
-        $file = "sdk_macMix_${{ inputs.version }}.tgz"
-        if (-not (Test-Path $file)) {
-          Invoke-WebRequest "https://www.qhyccd.com/file/repository/publish/SDK/${{ inputs.version }}/$file" -OutFile $file -UseBasicParsing
-        } else {
-          Write-Host "Using cached $file"
-        }
-        tar -xzf $file
-      shell: pwsh
+        if [[ $(uname -m) == "arm64" ]]; then
+          file="sdk_mac_arm_${{ inputs.version }}.tgz"
+          url="https://www.qhyccd.com/file/repository/publish/SDK/${{ inputs.version }}/sdk_mac_arm_${{ inputs.version }}.tgz"
+        else
+          file="sdk_macMix_${{ inputs.version }}.tgz"
+          url="https://www.qhyccd.com/file/repository/publish/SDK/${{ inputs.version }}/sdk_macMix_${{ inputs.version }}.tgz"
+        fi
+        
+        if [ ! -f "$file" ]; then
+          wget "$url"
+        else
+          echo "Using cached $file"
+        fi
+        tar -xzf "$file"
+      shell: bash
 
     - id: cache-save
       if: inputs.cache == 'true' && steps.cache-restore.outputs.cache-hit != 'true'
@@ -86,3 +94,4 @@ runs:
           sdk_linux64_*.tgz
           sdk_WinMix_*.zip
           sdk_macMix_*.tgz
+          sdk_mac_arm_*.tgz
