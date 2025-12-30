@@ -42,4 +42,8 @@ jobs:
       - name: Verify Installation (macOS)
         if: runner.os == 'macOS'
         run: |
-          find . -name "*.dylib" -o -name "*.framework" | head -10 || echo "No QHYCCD libraries found"
+          find . -name "*.dylib" -o -name "*.framework" -o -name "*.a" | head -10
+          if [ $(find . -name "*.dylib" -o -name "*.framework" -o -name "*.a" | wc -l) -eq 0 ]; then
+            echo "No QHYCCD SDK files found"
+            exit 1
+          fi
