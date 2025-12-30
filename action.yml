@@ -37,7 +37,7 @@ runs:
         path: |
           sdk_linux64_*.tgz
           sdk_WinMix_*.zip
-          QHYCCD_SDK_*.dmg
+          sdk_macMix_*.tgz
 
     - id: install-linux
       if: runner.os == 'Linux'
@@ -68,15 +68,13 @@ runs:
     - id: install-macos
       if: runner.os == 'macOS'
       run: |
-        $file = "QHYCCD_SDK_${{ inputs.version }}.dmg"
+        $file = "sdk_macMix_${{ inputs.version }}.tgz"
         if (-not (Test-Path $file)) {
           Invoke-WebRequest "https://www.qhyccd.com/file/repository/publish/SDK/${{ inputs.version }}/$file" -OutFile $file -UseBasicParsing
         } else {
           Write-Host "Using cached $file"
         }
-        hdiutil attach $file
-        sudo installer -pkg "/Volumes/QHYCCD SDK/QHYCCD SDK.pkg" -target /
-        hdiutil detach "/Volumes/QHYCCD SDK"
+        tar -xzf $file
       shell: pwsh
 
     - id: cache-save
@@ -87,4 +85,4 @@ runs:
         path: |
           sdk_linux64_*.tgz
           sdk_WinMix_*.zip
-          QHYCCD_SDK_*.dmg
+          sdk_macMix_*.tgz
