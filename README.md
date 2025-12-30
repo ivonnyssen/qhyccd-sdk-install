@@ -43,7 +43,10 @@ GitHub Action to install [QHYCCD SDK](https://www.qhyccd.com) on Linux, Windows,
 ```yaml
 name: Test with QHYCCD SDK
 
-on: [push, pull_request]
+on:
+  push:
+    branches: [main]
+  pull_request:
 
 jobs:
   test:
