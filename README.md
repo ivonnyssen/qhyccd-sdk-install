@@ -7,7 +7,7 @@ GitHub Action to install [QHYCCD SDK](https://www.qhyccd.com) on Linux, Windows,
 ```yaml
 - uses: ivonnyssen/qhyccd-sdk-install@v1
   with:
-    version: "24.12.27"
+    version: "25.09.29"
 ```
 
 ### With caching disabled
@@ -15,7 +15,7 @@ GitHub Action to install [QHYCCD SDK](https://www.qhyccd.com) on Linux, Windows,
 ```yaml
 - uses: ivonnyssen/qhyccd-sdk-install@v1
   with:
-    version: "24.12.27"
+    version: "25.09.29"
     cache: false
 ```
 
@@ -54,7 +54,7 @@ jobs:
       - name: Install QHYCCD SDK
         uses: ivonnyssen/qhyccd-sdk-install@v1
         with:
-          version: "24.12.27"
+          version: "25.09.29"
       
       - name: Build project
         run: |
@@ -64,4 +64,4 @@ jobs:
 
 ## Version Format
 
-The version should match the QHYCCD SDK release format (e.g., "24.12.27").
+The version should match the QHYCCD SDK release format (e.g., "25.09.29").
