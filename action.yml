@@ -14,11 +14,6 @@ inputs:
     required: false
     default: 'true'
 
-outputs:
-  version:
-    description: Installed QHYCCD SDK version
-    value: ${{ inputs.version }}
-
 runs:
   using: composite
   steps:

@@ -26,12 +26,6 @@ GitHub Action to install [QHYCCD SDK](https://www.qhyccd.com) on Linux, Windows,
 | `version` | QHYCCD SDK version to install (required) | - |
 | `cache` | Enable caching of downloaded files | `true` |
 
-## Outputs
-
-| Name | Description |
-|------|-------------|
-| `version` | Installed QHYCCD SDK version |
-
 ## Supported Platforms
 
 - Linux (x64)
