@@ -23,7 +23,11 @@ jobs:
       - name: Verify Installation (Linux)
         if: runner.os == 'Linux'
         run: |
-          ls -la /usr/local/lib/ | grep qhy || echo "QHYCCD libraries not found in expected location"
+          find . -name "*.so*" -o -name "*.a" | head -10
+          if [ $(find . -name "*.so*" -o -name "*.a" | wc -l) -eq 0 ]; then
+            echo "No QHYCCD SDK files found"
+            exit 1
+          fi
           
       - name: Verify Installation (Windows)
         if: runner.os == 'Windows'
