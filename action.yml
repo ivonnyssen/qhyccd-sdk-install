@@ -36,7 +36,7 @@ runs:
           qhyccd-sdk-
         path: |
           sdk_linux64_*.tgz
-          QHYCCD_SDK_*.zip
+          sdk_WinMix_*.zip
           QHYCCD_SDK_*.dmg
 
     - id: install-linux
@@ -56,14 +56,14 @@ runs:
     - id: install-windows
       if: runner.os == 'Windows'
       run: |
-        $file = "QHYCCD_SDK_${{ inputs.version }}.zip"
+        $file = "sdk_WinMix_${{ inputs.version }}.zip"
         if (-not (Test-Path $file)) {
           Invoke-WebRequest "https://www.qhyccd.com/file/repository/publish/SDK/${{ inputs.version }}/$file" -OutFile $file -UseBasicParsing
         } else {
           Write-Host "Using cached $file"
         }
-        Expand-Archive $file -DestinationPath "QHYCCD_SDK_${{ inputs.version }}" -Force
-        cd "QHYCCD_SDK_${{ inputs.version }}"
+        Expand-Archive $file -DestinationPath "sdk_WinMix_${{ inputs.version }}" -Force
+        cd "sdk_WinMix_${{ inputs.version }}"
         .\install.bat
       shell: powershell
 
@@ -88,5 +88,5 @@ runs:
         key: ${{ steps.cache-key.outputs.key }}
         path: |
           sdk_linux64_*.tgz
-          QHYCCD_SDK_*.zip
+          sdk_WinMix_*.zip
           QHYCCD_SDK_*.dmg
