@@ -28,7 +28,11 @@ jobs:
       - name: Verify Installation (Windows)
         if: runner.os == 'Windows'
         run: |
-          Get-ChildItem "C:\Program Files\QHYCCD" -ErrorAction SilentlyContinue | Out-String
+          Get-ChildItem -Recurse -Include "*.dll", "*.lib" | Select-Object -First 10 | Format-Table Name, Length
+          if ((Get-ChildItem -Recurse -Include "*.dll", "*.lib").Count -eq 0) {
+            Write-Host "No QHYCCD SDK files found"
+            exit 1
+          }
         shell: powershell
         
       - name: Verify Installation (macOS)
