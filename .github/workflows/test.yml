@@ -15,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       
-      - name: Test QHYCCD SDK Installation
+      - name: Install QHYCCD SDK
         uses: ./
         with:
           version: "25.09.29"
