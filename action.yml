@@ -1,5 +1,5 @@
 name: Install QHYCCD SDK
-author: qhyccd-sdk-install
+author: Igor von Nyssen
 description: Install QHYCCD SDK on Linux, Windows, and macOS
 branding:
   icon: download
