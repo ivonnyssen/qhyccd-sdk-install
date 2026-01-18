@@ -5,7 +5,7 @@ GitHub Action to install [QHYCCD SDK](https://www.qhyccd.com) on Linux, Windows,
 ## Usage
 
 ```yaml
-- uses: ivonnyssen/qhyccd-sdk-install@v1
+- uses: ivonnyssen/qhyccd-sdk-install@v2
   with:
     version: "25.09.29"
 ```
@@ -13,7 +13,7 @@ GitHub Action to install [QHYCCD SDK](https://www.qhyccd.com) on Linux, Windows,
 ### With caching disabled
 
 ```yaml
-- uses: ivonnyssen/qhyccd-sdk-install@v1
+- uses: ivonnyssen/qhyccd-sdk-install@v2
   with:
     version: "25.09.29"
     cache: false
@@ -45,7 +45,7 @@ This action works with [act](https://github.com/nektos/act) for local testing. T
 Alternatively, you can explicitly disable caching when testing locally:
 
 ```yaml
-- uses: ivonnyssen/qhyccd-sdk-install@v1
+- uses: ivonnyssen/qhyccd-sdk-install@v2
   with:
     version: "25.09.29"
     cache: false
@@ -68,7 +68,7 @@ jobs:
       - uses: actions/checkout@v6
       
       - name: Install QHYCCD SDK
-        uses: ivonnyssen/qhyccd-sdk-install@v1
+        uses: ivonnyssen/qhyccd-sdk-install@v2
         with:
           version: "25.09.29"
       
