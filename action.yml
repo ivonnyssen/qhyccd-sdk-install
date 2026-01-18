@@ -23,6 +23,7 @@ runs:
 
     - id: cache-restore
       if: inputs.cache == 'true'
+      continue-on-error: true
       uses: actions/cache/restore@v5
       with:
         key: ${{ steps.cache-key.outputs.key }}
@@ -61,6 +62,12 @@ runs:
         Expand-Archive $file -DestinationPath "." -Force
       shell: powershell
 
+    - id: add-path-windows
+      if: runner.os == 'Windows'
+      run: |
+        echo "${{ github.workspace }}\pkg_win\x64" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+      shell: powershell
+
     - id: install-macos
       if: runner.os == 'macOS'
       run: |
@@ -71,7 +78,7 @@ runs:
           file="sdk_macMix_${{ inputs.version }}.tgz"
           url="https://www.qhyccd.com/file/repository/publish/SDK/${{ inputs.version }}/sdk_macMix_${{ inputs.version }}.tgz"
         fi
-        
+
         if [ ! -f "$file" ]; then
           wget "$url"
         else
@@ -80,8 +87,19 @@ runs:
         tar -xzf "$file"
       shell: bash
 
+    - id: add-path-macos
+      if: runner.os == 'macOS'
+      run: |
+        if [[ $(uname -m) == "arm64" ]]; then
+          echo "${{ github.workspace }}/sdk_mac_arm_${{ inputs.version }}" >> $GITHUB_PATH
+        else
+          echo "${{ github.workspace }}/sdk_macMix_${{ inputs.version }}" >> $GITHUB_PATH
+        fi
+      shell: bash
+
     - id: cache-save
       if: inputs.cache == 'true' && steps.cache-restore.outputs.cache-hit != 'true'
+      continue-on-error: true
       uses: actions/cache/save@v5
       with:
         key: ${{ steps.cache-key.outputs.key }}
